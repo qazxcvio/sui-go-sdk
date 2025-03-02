@@ -18,8 +18,8 @@ type CheckpointResponse struct {
 	//NetworkTotalTransactions   string                     `json:"networkTotalTransactions"`
 	PreviousDigest             string                     `json:"previousDigest"`
 	EpochRollingGasCostSummary EpochRollingGasCostSummary `json:"epochRollingGasCostSummary"`
-	//TimestampMs                string                     `json:"timestampMs"`
-	Transactions []string `json:"transactions"`
+	TimestampMs                string                     `json:"timestampMs"`
+	Transactions               []string                   `json:"transactions"`
 	//CheckpointCommitments      []interface{}              `json:"checkpointCommitments"`
 	//ValidatorSignature         string                     `json:"validatorSignature"`
 }
