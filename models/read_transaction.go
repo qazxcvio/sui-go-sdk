@@ -196,8 +196,8 @@ type SuiTransactionBlockResponse struct {
 	//Events                  []SuiEventResponse  `json:"events,omitempty"`
 	//ObjectChanges           []ObjectChange      `json:"objectChanges,omitempty"`
 	BalanceChanges []BalanceChanges `json:"balanceChanges,omitempty"`
-	//TimestampMs             string              `json:"timestampMs,omitempty"`
-	Checkpoint string `json:"checkpoint,omitempty"`
+	TimestampMs    string           `json:"timestampMs,omitempty"`
+	Checkpoint     string           `json:"checkpoint,omitempty"`
 	//ConfirmedLocalExecution bool                `json:"confirmedLocalExecution,omitempty"`
 }
 
