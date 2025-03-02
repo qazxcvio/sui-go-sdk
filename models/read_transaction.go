@@ -29,9 +29,9 @@ type SuiArgument map[string]interface{}
 type SuiCallArg map[string]interface{}
 
 type SuiTransactionBlockKind struct {
-	Kind         string       `json:"kind"`
-	Inputs       []SuiCallArg `json:"inputs"`
-	Transactions []any        `json:"transactions"`
+	Kind   string       `json:"kind"`
+	Inputs []SuiCallArg `json:"inputs"`
+	//Transactions []any        `json:"transactions"`
 }
 
 func MoveCall(data any) *MoveCallSuiTransaction {
@@ -70,15 +70,15 @@ type MoveCallSuiTransaction struct {
 }
 
 type SuiTransactionBlockData struct {
-	MessageVersion string                  `json:"messageVersion"`
-	Transaction    SuiTransactionBlockKind `json:"transaction"`
-	Sender         string                  `json:"sender"`
-	GasData        SuiGasData              `json:"gasData"`
+	//MessageVersion string                  `json:"messageVersion"`
+	Transaction SuiTransactionBlockKind `json:"transaction"`
+	Sender      string                  `json:"sender"`
+	//GasData        SuiGasData              `json:"gasData"`
 }
 
 type SuiTransactionBlock struct {
-	Data         SuiTransactionBlockData `json:"data"`
-	TxSignatures []string                `json:"txSignatures"`
+	Data SuiTransactionBlockData `json:"data"`
+	//TxSignatures []string                `json:"txSignatures"`
 }
 
 type SuiObjectRef struct {
@@ -156,19 +156,19 @@ type OwnedObjectRef struct {
 }
 
 type SuiEffects struct {
-	MessageVersion     string               `json:"messageVersion"`
-	Status             ExecutionStatus      `json:"status"`
-	ExecutedEpoch      string               `json:"executedEpoch"`
-	GasUsed            GasCostSummary       `json:"gasUsed"`
-	ModifiedAtVersions []ModifiedAtVersions `json:"modifiedAtVersions"`
-	SharedObjects      []SuiObjectRef       `json:"sharedObjects"`
-	TransactionDigest  string               `json:"transactionDigest"`
-	Created            []OwnedObjectRef     `json:"created"`
-	Mutated            []OwnedObjectRef     `json:"mutated"`
-	Deleted            []SuiObjectRef       `json:"deleted"`
-	GasObject          OwnedObjectRef       `json:"gasObject"`
-	EventsDigest       string               `json:"eventsDigest"`
-	Dependencies       []string             `json:"dependencies"`
+	//MessageVersion     string               `json:"messageVersion"`
+	Status ExecutionStatus `json:"status"`
+	//ExecutedEpoch      string               `json:"executedEpoch"`
+	GasUsed GasCostSummary `json:"gasUsed"`
+	//ModifiedAtVersions []ModifiedAtVersions `json:"modifiedAtVersions"`
+	//SharedObjects      []SuiObjectRef       `json:"sharedObjects"`
+	//TransactionDigest  string               `json:"transactionDigest"`
+	//Created            []OwnedObjectRef     `json:"created"`
+	//Mutated            []OwnedObjectRef     `json:"mutated"`
+	//Deleted            []SuiObjectRef       `json:"deleted"`
+	//GasObject          OwnedObjectRef       `json:"gasObject"`
+	//EventsDigest       string               `json:"eventsDigest"`
+	//Dependencies       []string             `json:"dependencies"`
 }
 
 type ExecutionStatus struct {
@@ -189,16 +189,16 @@ type ModifiedAtVersions struct {
 }
 
 type SuiTransactionBlockResponse struct {
-	Digest                  string              `json:"digest"`
-	Transaction             SuiTransactionBlock `json:"transaction,omitempty"`
-	RawTransaction          string              `json:"rawTransaction,omitempty"`
-	Effects                 SuiEffects          `json:"effects,omitempty"`
-	Events                  []SuiEventResponse  `json:"events,omitempty"`
-	ObjectChanges           []ObjectChange      `json:"objectChanges,omitempty"`
-	BalanceChanges          []BalanceChanges    `json:"balanceChanges,omitempty"`
-	TimestampMs             string              `json:"timestampMs,omitempty"`
-	Checkpoint              string              `json:"checkpoint,omitempty"`
-	ConfirmedLocalExecution bool                `json:"confirmedLocalExecution,omitempty"`
+	Digest      string              `json:"digest"`
+	Transaction SuiTransactionBlock `json:"transaction,omitempty"`
+	//RawTransaction          string              `json:"rawTransaction,omitempty"`
+	Effects SuiEffects `json:"effects,omitempty"`
+	//Events                  []SuiEventResponse  `json:"events,omitempty"`
+	//ObjectChanges           []ObjectChange      `json:"objectChanges,omitempty"`
+	BalanceChanges []BalanceChanges `json:"balanceChanges,omitempty"`
+	//TimestampMs             string              `json:"timestampMs,omitempty"`
+	Checkpoint string `json:"checkpoint,omitempty"`
+	//ConfirmedLocalExecution bool                `json:"confirmedLocalExecution,omitempty"`
 }
 
 func (o ObjectChange) GetObjectChangeAddressOwner() string {

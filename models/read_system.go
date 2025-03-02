@@ -12,16 +12,16 @@ type EpochRollingGasCostSummary struct {
 }
 
 type CheckpointResponse struct {
-	Epoch                      string                     `json:"epoch"`
-	SequenceNumber             string                     `json:"sequenceNumber"`
-	Digest                     string                     `json:"digest"`
-	NetworkTotalTransactions   string                     `json:"networkTotalTransactions"`
+	//Epoch                      string                     `json:"epoch"`
+	SequenceNumber string `json:"sequenceNumber"`
+	Digest         string `json:"digest"`
+	//NetworkTotalTransactions   string                     `json:"networkTotalTransactions"`
 	PreviousDigest             string                     `json:"previousDigest"`
 	EpochRollingGasCostSummary EpochRollingGasCostSummary `json:"epochRollingGasCostSummary"`
-	TimestampMs                string                     `json:"timestampMs"`
-	Transactions               []string                   `json:"transactions"`
-	CheckpointCommitments      []interface{}              `json:"checkpointCommitments"`
-	ValidatorSignature         string                     `json:"validatorSignature"`
+	//TimestampMs                string                     `json:"timestampMs"`
+	Transactions []string `json:"transactions"`
+	//CheckpointCommitments      []interface{}              `json:"checkpointCommitments"`
+	//ValidatorSignature         string                     `json:"validatorSignature"`
 }
 
 type SuiGetCheckpointsRequest struct {

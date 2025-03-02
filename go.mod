@@ -6,6 +6,7 @@ require (
 	github.com/fardream/go-bcs v0.7.0
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/gorilla/websocket v1.5.0
+	github.com/json-iterator/go v1.1.12
 	github.com/machinebox/graphql v0.2.2
 	github.com/mr-tron/base58 v1.2.0
 	github.com/tidwall/gjson v1.14.4
@@ -19,6 +20,8 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/leodido/go-urn v1.2.2 // indirect
 	github.com/matryer/is v1.4.1 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect

@@ -3,7 +3,9 @@ package httpconn
 import (
 	"bytes"
 	"context"
-	"encoding/json"
+	jsoniter "github.com/json-iterator/go"
+
+	//"encoding/json"
 	"github.com/block-vision/sui-go-sdk/models"
 	"io/ioutil"
 	"net/http"
@@ -13,6 +15,8 @@ import (
 )
 
 const defaultTimeout = time.Second * 5
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type HttpConn struct {
 	c       *http.Client

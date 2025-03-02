@@ -5,12 +5,15 @@ package sui
 
 import (
 	"context"
-	"encoding/json"
+	//"encoding/json"
 	"errors"
 	"github.com/block-vision/sui-go-sdk/common/httpconn"
 	"github.com/block-vision/sui-go-sdk/models"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/tidwall/gjson"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type IReadTransactionFromSuiAPI interface {
 	SuiGetTotalTransactionBlocks(ctx context.Context) (uint64, error)
@@ -41,24 +44,31 @@ func (s *suiReadTransactionFromSuiImpl) SuiGetTotalTransactionBlocks(ctx context
 
 // SuiGetTransactionBlock implements the method `sui_getTransactionBlock`, gets the transaction response object for a specified transaction digest.
 func (s *suiReadTransactionFromSuiImpl) SuiGetTransactionBlock(ctx context.Context, req models.SuiGetTransactionBlockRequest) (models.SuiTransactionBlockResponse, error) {
-	var rsp models.SuiTransactionBlockResponse
+	// 发起请求
 	respBytes, err := s.conn.Request(ctx, httpconn.Operation{
 		Method: "sui_getTransactionBlock",
-		Params: []interface{}{
-			req.Digest,
-			req.Options,
-		},
+		Params: []interface{}{req.Digest, req.Options},
 	})
 	if err != nil {
-		return rsp, err
+		return models.SuiTransactionBlockResponse{}, err
 	}
-	if gjson.ParseBytes(respBytes).Get("error").Exists() {
-		return rsp, errors.New(gjson.ParseBytes(respBytes).Get("error").String())
+
+	// ------------ 关键优化点 ------------
+	// 只解析一次 JSON 响应，避免重复内存分配
+	parsed := gjson.ParseBytes(respBytes)
+
+	// 检查错误字段
+	if errResult := parsed.Get("error"); errResult.Exists() {
+		return models.SuiTransactionBlockResponse{}, errors.New(errResult.String())
 	}
-	err = json.Unmarshal([]byte(gjson.ParseBytes(respBytes).Get("result").Raw), &rsp)
-	if err != nil {
-		return rsp, err
+
+	// 直接解析结果部分到目标结构体
+	var rsp models.SuiTransactionBlockResponse
+	if err := json.Unmarshal([]byte(parsed.Get("result").Raw), &rsp); err != nil {
+		return models.SuiTransactionBlockResponse{}, err
 	}
+	// -----------------------------------
+
 	return rsp, nil
 }
 
