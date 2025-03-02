@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/block-vision/sui-go-sdk/constant"
@@ -13,7 +12,7 @@ import (
 )
 
 var ctx = context.Background()
-var cli = sui.NewSuiClient(constant.BvTestnetEndpoint)
+var cli = sui.NewSuiClient(constant.BvMainnetEndpoint)
 
 func main() {
 	//SuiGetTotalTransactionBlocks()
@@ -35,7 +34,6 @@ func main() {
 	//BatchTransaction()
 	//SuiExecuteTransactionBlock()
 	//SuiDryRunTransactionBlock()
-	//SuiDevInspectTransactionBlock()
 	//SignAndExecuteTransactionBlock()
 }
 
@@ -74,12 +72,11 @@ func SuiDryRunTransactionBlock() {
 }
 
 func SuiDevInspectTransactionBlock() {
-	type moveCallResult struct {
-		ReturnValues [2]interface{}
-	}
 	rsp, err := cli.SuiDevInspectTransactionBlock(ctx, models.SuiDevInspectTransactionBlockRequest{
 		Sender:   "0x4ae8be62692d1bbf892b657ee78a59954240ee0525f20a5b5687a70995cf0eff",
-		TxBytes:  "AAUBAFIMicbHjFZu7Q6/JPhUqMItj90GpvFq0B8Qja1/G6rqFSjPCgAAAAAgU+6E0DJf97dwaRV0MdseKxCPU97monpYtyfJSa7jKQAACKCGAQAAAAAAAAiAlpgAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYtKc8KAAAAACBhjSVWnhYSnxbZuJWgDlXi2j3pp7gqJJizx29rU/Ly+QEAy/R0ipZdRp6jo2zwzMV0O5bC0K5t7gdi7T7KZfrAf34EcG9vbBBnZXRfbGV2ZWwyX3JhbmdlAgcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNzdWkDU1VJAAf3FSwFkwSAzXQNcxG1uLRcb0iOOlOhHD90pvrDalLg1wZEQlVTREMGREJVU0RDAAUBAAABAQABAgABAwABBAA=",
+		TxBytes:  "AAACAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQEAAAAAAAAAAQEAjgDW4hJZlqvw654RGR3SdndKkdjoC0pzXQLxja/NUahLowQAAAAAACBEQGwClI9RQX68dzbN7PN29/Pw/Sc1hbtZwNAny7wZ+wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMKc3VpX3N5c3RlbRZyZXF1ZXN0X3dpdGhkcmF3X3N0YWtlAAIBAAABAQC3+Y0yfxn2dDR+HkBkFAglMULW5+UJOnyW7ajN/X2btQEqzrI5x8BMQ6LjmCSgAykfjisdYCcyTfW79nyzDB/PvtZBpwAAAAAAIAm+IREDziwoZLm7lc4ZKegZ2J5viEgoss9zgrFkHLh6t/mNMn8Z9nQ0fh5AZBQIJTFC1uflCTp8lu2ozf19m7XoAwAAAAAAAFDhjyoAAAAAAA==",
+		GasPrice: "1000",
+		Epoch:    "87",
 	})
 
 	if err != nil {
@@ -87,12 +84,6 @@ func SuiDevInspectTransactionBlock() {
 		return
 	}
 
-	var moveCallReturn []moveCallResult
-	err = json.Unmarshal(rsp.Results, &moveCallReturn)
-	if err != nil {
-		fmt.Println("json", err.Error())
-		return
-	}
 	utils.PrettyPrint(rsp)
 }
 
@@ -152,7 +143,7 @@ func SuiGetTotalTransactionBlocks() {
 
 func SuiGetTransactionBlock() {
 	rsp, err := cli.SuiGetTransactionBlock(ctx, models.SuiGetTransactionBlockRequest{
-		Digest: "DjubVWzkndWDTzcWVd6g3xbQsfG3H2Gt7vMfrm1YjLNJ",
+		Digest: "AhZYEiFFQtv5i1nLaURHiyvQNiyUBzNCHodnKFxgc2Lf",
 		Options: models.SuiTransactionBlockOptions{
 			ShowInput:          true,
 			ShowRawInput:       true,

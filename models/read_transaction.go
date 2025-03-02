@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+
 	"github.com/tidwall/gjson"
 )
 
@@ -198,7 +199,6 @@ type SuiTransactionBlockResponse struct {
 	TimestampMs             string              `json:"timestampMs,omitempty"`
 	Checkpoint              string              `json:"checkpoint,omitempty"`
 	ConfirmedLocalExecution bool                `json:"confirmedLocalExecution,omitempty"`
-	Results                 json.RawMessage     `json:"results,omitempty"`
 }
 
 func (o ObjectChange) GetObjectChangeAddressOwner() string {
@@ -262,41 +262,9 @@ type ObjectChange struct {
 }
 
 type BalanceChanges struct {
-	Owner    json.RawMessage `json:"owner"`
-	CoinType string          `json:"coinType"`
-	Amount   string          `json:"amount"`
-}
-
-type IOwner interface {
-	GetBalanceChangeOwner() string
-}
-
-type OwnerString string
-
-func (o OwnerString) GetBalanceChangeOwner() string {
-	return string(o)
-}
-
-type BalanceChangeOwner struct {
-	AddressOwner string `json:"AddressOwner"`
-	ObjectOwner  string `json:"ObjectOwner"`
-}
-
-func (o BalanceChanges) GetBalanceChangeOwner() string {
-	var addressOwner BalanceChangeOwner
-	if err := json.Unmarshal(o.Owner, &addressOwner); err == nil {
-		if addressOwner.AddressOwner != "" {
-			return addressOwner.AddressOwner
-		}
-	}
-
-	var immutableOwner string
-	if err := json.Unmarshal(o.Owner, &immutableOwner); err == nil {
-		if immutableOwner == "Immutable" {
-			return "Immutable"
-		}
-	}
-	return ""
+	Owner    ObjectOwner `json:"owner"`
+	CoinType string      `json:"coinType"`
+	Amount   string      `json:"amount"`
 }
 
 type SuiMultiGetTransactionBlocksRequest struct {
@@ -377,9 +345,9 @@ type SuiDevInspectTransactionBlockRequest struct {
 	// BCS encoded TransactionKind(as opposed to TransactionData, which include gasBudget and gasPrice)
 	TxBytes string `json:"txBytes"`
 	// Gas is not charged, but gas usage is still calculated. Default to use reference gas price
-	GasPrice string `json:"gasPrice,omitempty"`
+	GasPrice string `json:"gasPrice"`
 	// The epoch to perform the call. Will be set from the system state object if not provided
-	Epoch string `json:"epoch,omitempty"`
+	Epoch string `json:"epoch"`
 }
 
 type SuiXSubscribeEventsRequest struct {

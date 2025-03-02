@@ -1,7 +1,6 @@
 package models
 
 import (
-	"bytes"
 	"crypto"
 	"crypto/ed25519"
 	"encoding/base64"
@@ -13,7 +12,6 @@ import (
 	"golang.org/x/crypto/blake2b"
 
 	"github.com/block-vision/sui-go-sdk/constant"
-	"github.com/block-vision/sui-go-sdk/mystenbcs"
 )
 
 type InputObjectKind map[string]interface{}
@@ -196,12 +194,7 @@ func VerifyTransaction(b64Message string, signature string) (signer string, pass
 
 func VerifyMessage(message, signature string, scope constant.IntentScope) (signer string, pass bool, err error) {
 	b64Bytes, _ := base64.StdEncoding.DecodeString(message)
-
-	bcsEncodedMsg := bytes.Buffer{}
-	bcsEncoder := mystenbcs.NewEncoder(&bcsEncodedMsg)
-	bcsEncoder.Encode(b64Bytes)
-
-	messageBytes := NewMessageWithIntent(bcsEncodedMsg.Bytes(), scope)
+	messageBytes := NewMessageWithIntent(b64Bytes, scope)
 
 	serializedSignature, err := FromSerializedSignature(signature)
 	if err != nil {

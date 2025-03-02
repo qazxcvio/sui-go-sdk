@@ -1,7 +1,6 @@
 package ed25519
 
 import (
-	"bytes"
 	"crypto/ed25519"
 	"encoding/base64"
 	"encoding/hex"
@@ -11,8 +10,6 @@ import (
 	"golang.org/x/crypto/blake2b"
 
 	"github.com/block-vision/sui-go-sdk/constant"
-	"github.com/block-vision/sui-go-sdk/models"
-	"github.com/block-vision/sui-go-sdk/mystenbcs"
 )
 
 type Ed25519PublicKey struct {
@@ -26,26 +23,19 @@ func NewEd25519PublicKey(signature []byte) *Ed25519PublicKey {
 }
 
 func (e *Ed25519PublicKey) ToSuiAddress() string {
-	panic("not implemented")
+	return ""
 }
 
 func (e *Ed25519PublicKey) VerifyPersonalMessage(message []byte, signature []byte, client *graphql.Client) (bool, error) {
 	b64Message := base64.StdEncoding.EncodeToString([]byte(message))
-	b64Signature := base64.StdEncoding.EncodeToString([]byte(signature))
-	_, pass, err := VerifyMessage(b64Message, b64Signature, constant.PersonalMessageIntentScope)
-	return pass, err
+	return VerifyMessage(b64Message, signature, constant.PersonalMessageIntentScope)
 }
 
 func VerifyMessage(message, signature string, scope constant.IntentScope) (signer string, pass bool, err error) {
 	b64Bytes, _ := base64.StdEncoding.DecodeString(message)
+	messageBytes := NewMessageWithIntent(b64Bytes, scope)
 
-	bcsEncodedMsg := bytes.Buffer{}
-	bcsEncoder := mystenbcs.NewEncoder(&bcsEncodedMsg)
-	bcsEncoder.Encode(b64Bytes)
-
-	messageBytes := models.NewMessageWithIntent(bcsEncodedMsg.Bytes(), scope)
-
-	serializedSignature, err := models.FromSerializedSignature(signature)
+	serializedSignature, err := FromSerializedSignature(signature)
 	if err != nil {
 		return "", false, err
 	}
@@ -62,7 +52,7 @@ func VerifyMessage(message, signature string, scope constant.IntentScope) (signe
 }
 
 func Ed25519PublicKeyToSuiAddress(pubKey []byte) string {
-	newPubkey := []byte{byte(models.SigFlagEd25519)}
+	newPubkey := []byte{byte(SigFlagEd25519)}
 	newPubkey = append(newPubkey, pubKey...)
 
 	addrBytes := blake2b.Sum256(newPubkey)

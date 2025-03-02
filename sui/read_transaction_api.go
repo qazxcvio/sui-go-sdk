@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/block-vision/sui-go-sdk/common/httpconn"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/tidwall/gjson"
@@ -58,7 +57,7 @@ func (s *suiReadTransactionFromSuiImpl) SuiGetTransactionBlock(ctx context.Conte
 	}
 	err = json.Unmarshal([]byte(gjson.ParseBytes(respBytes).Get("result").Raw), &rsp)
 	if err != nil {
-		return rsp, fmt.Errorf("unmarshal sui_getTransactionBlock err: %v response: %s", err, string(respBytes))
+		return rsp, err
 	}
 	return rsp, nil
 }
@@ -81,7 +80,7 @@ func (s *suiReadTransactionFromSuiImpl) SuiMultiGetTransactionBlocks(ctx context
 	}
 	err = json.Unmarshal([]byte(gjson.ParseBytes(respBytes).Get("result").Raw), &rsp)
 	if err != nil {
-		return rsp, fmt.Errorf("unmarshal sui_multiGetTransactionBlocks err: %v response: %s", err, string(respBytes))
+		return rsp, err
 	}
 	return rsp, nil
 }
@@ -109,7 +108,7 @@ func (s *suiReadTransactionFromSuiImpl) SuiXQueryTransactionBlocks(ctx context.C
 	}
 	err = json.Unmarshal([]byte(gjson.ParseBytes(respBytes).Get("result").Raw), &rsp)
 	if err != nil {
-		return rsp, fmt.Errorf("unmarshal suix_queryTransactionBlocks err: %v response: %s", err, string(respBytes))
+		return rsp, err
 	}
 	return rsp, nil
 }
@@ -140,29 +139,23 @@ func (s *suiReadTransactionFromSuiImpl) SuiDryRunTransactionBlock(ctx context.Co
 // Which allows for nearly any transaction (or Move call) with any arguments.
 // Detailed results are provided, including both the transaction effects and any return values.
 func (s *suiReadTransactionFromSuiImpl) SuiDevInspectTransactionBlock(ctx context.Context, req models.SuiDevInspectTransactionBlockRequest) (models.SuiTransactionBlockResponse, error) {
-	params := []interface{}{
-		req.Sender,
-		req.TxBytes,
-	}
-	if req.GasPrice != "" {
-		params = append(params, req.GasPrice)
-	}
-	if req.Epoch != "" {
-		params = append(params, req.Epoch)
-	}
 	var rsp models.SuiTransactionBlockResponse
 	respBytes, err := s.conn.Request(ctx, httpconn.Operation{
 		Method: "sui_devInspectTransactionBlock",
-		Params: params,
+		Params: []interface{}{
+			req.Sender,
+			req.TxBytes,
+			req.GasPrice,
+			req.Epoch,
+		},
 	})
 	if err != nil {
 		return rsp, err
 	}
-	parsedJson := gjson.ParseBytes(respBytes)
-	if parsedJson.Get("error").Exists() {
-		return rsp, errors.New(parsedJson.Get("error").String())
+	if gjson.ParseBytes(respBytes).Get("error").Exists() {
+		return rsp, errors.New(gjson.ParseBytes(respBytes).Get("error").String())
 	}
-	err = json.Unmarshal([]byte(parsedJson.Get("result").Raw), &rsp)
+	err = json.Unmarshal([]byte(gjson.ParseBytes(respBytes).Get("result").Raw), &rsp)
 	if err != nil {
 		return rsp, err
 	}
